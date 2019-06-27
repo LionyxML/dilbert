@@ -8,8 +8,15 @@
 # Version 2    : Distinguish between X and tty, calling dif viewers (08.07.2017)
 # Version 3    : Added --keep option (18.07.2017)
 # Version 4    : Added --quiet_keep  (25.02.2019)
+# Version 5    : Added macos support (14.06.2019)
 
-VIEWER="fbi -a"
+
+case "$OSTYPE" in
+  linux*)   CMD_SED="sed" && VIEWER="fbi -a" ;;
+  darwin*)  CMD_SED="gsed" && VIEWER="qlmanage -p" ;;
+  *)        echo "OS não suportado" && exit 1 ;;
+esac
+
 BASE_URL=dilbert.com/strip/
 TARGET_DATE=$( date +%Y-%m-%d )
 LOCAL_FILE=dilbert_temp.gif
@@ -61,7 +68,7 @@ echo -e "\nDownlowading strip from $TARGET_DATE...\n"
 
 URL=$BASE_URL$TARGET_DATE
 
-wget --show-progress "http:"$( w3m -dump_source "$URL" | zcat | sed -n "/img-comic-container/,+4p" | sed -n 's/.*src="\([^"]*\)".*/\1/p' ) -O $LOCAL_FILE
+wget --show-progress "http:"$( w3m -dump_source "$URL" | zcat | $CMD_SED -n "/img-comic-container/,+4p" | $CMD_SED -n 's/.*src="\([^"]*\)".*/\1/p' ) -O $LOCAL_FILE
 
 [ $DISPLAY ] && VIEWER='feh ' 
 
