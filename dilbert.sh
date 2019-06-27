@@ -14,7 +14,7 @@
 case "$OSTYPE" in
   linux*)   CMD_SED="sed" && VIEWER="fbi -a" ;;
   darwin*)  CMD_SED="gsed" && VIEWER="qlmanage -p" ;;
-  *)        echo "OS não suportado" && exit 1 ;;
+  *)        echo "Not supported OS" && exit 1 ;;
 esac
 
 BASE_URL=dilbert.com/strip/
