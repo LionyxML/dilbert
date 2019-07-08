@@ -9,6 +9,7 @@
 # Version 3    : Added --keep option (18.07.2017)
 # Version 4    : Added --quiet_keep  (25.02.2019)
 # Version 5    : Added macos support (14.06.2019)
+# Version 6    : Fixed bug on macos asking for $DISPLAY variable
 
 
 case "$OSTYPE" in
@@ -64,13 +65,13 @@ esac
 
 rm -rf $LOCAL_FILE
 
-echo -e "\nDownlowading strip from $TARGET_DATE...\n"
+echo -e "\nDownloading strip from $TARGET_DATE...\n"
 
 URL=$BASE_URL$TARGET_DATE
 
 wget --show-progress "http:"$( w3m -dump_source "$URL" | zcat | $CMD_SED -n "/img-comic-container/,+4p" | $CMD_SED -n 's/.*src="\([^"]*\)".*/\1/p' ) -O $LOCAL_FILE
 
-[ $DISPLAY ] && VIEWER='feh ' 
+[ $DISPLAY ] && [[ $OSTYPE == "linux*" ]] && VIEWER='feh ' 
 
 [[ $QUIET == 0  ]] && $VIEWER $LOCAL_FILE
 
